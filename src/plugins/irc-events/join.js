@@ -3,11 +3,18 @@
 const Chan = require("../../models/chan");
 const Msg = require("../../models/msg");
 const User = require("../../models/user");
+const Helper = require("../../helper.js");
 
 module.exports = function (irc, network) {
 	const client = this;
 
 	irc.on("join", function (data) {
+		if (Helper.config.restrict.enable && data.channel.match(Helper.config.restrict.pattern) === null) {
+			network.channels[0].pushMessage(client, new Msg({
+				text: Helper.config.restrict.restrictMessage
+			}));
+			return;
+		}
 		let chan = network.getChannel(data.channel);
 
 		if (typeof chan === "undefined") {
@@ -36,7 +43,9 @@ module.exports = function (irc, network) {
 			});
 		}
 
-		const user = new User({nick: data.nick});
+		const user = new User({
+			nick: data.nick
+		});
 		const msg = new Msg({
 			time: data.time,
 			from: user,
@@ -48,7 +57,9 @@ module.exports = function (irc, network) {
 		});
 		chan.pushMessage(client, msg);
 
-		chan.setUser(new User({nick: data.nick}));
+		chan.setUser(new User({
+			nick: data.nick
+		}));
 		client.emit("users", {
 			chan: chan.id,
 		});

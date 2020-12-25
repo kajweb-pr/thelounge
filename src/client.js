@@ -389,7 +389,17 @@ Client.prototype.inputLine = function (data) {
 
 	const irc = target.network.irc;
 	let connected = irc && irc.connection && irc.connection.connected;
-
+	
+	if (cmd == 'join' && args[0]) {
+		let channel = args[0];
+		if (Helper.config.restrict.enable && channel.match(Helper.config.restrict.pattern) === null) {
+			target.network.channels[0].pushMessage(client, new Msg({
+				text: Helper.config.restrict.restrictMessage
+			}));
+			return false;
+		}
+	}	
+	
 	if (inputs.userInputs.has(cmd)) {
 		const plugin = inputs.userInputs.get(cmd);
 

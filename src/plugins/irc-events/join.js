@@ -9,12 +9,6 @@ module.exports = function (irc, network) {
 	const client = this;
 
 	irc.on("join", function (data) {
-		if (Helper.config.restrict.enable && data.channel.match(Helper.config.restrict.pattern) === null) {
-			network.channels[0].pushMessage(client, new Msg({
-				text: Helper.config.restrict.restrictMessage
-			}));
-			return;
-		}
 		let chan = network.getChannel(data.channel);
 
 		if (typeof chan === "undefined") {

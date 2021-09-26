@@ -6,7 +6,7 @@
 </h1>
 
 <h3 align="center">
-	Modern web IRC client designed for self-hosting
+	Modern web IRC client designed for self-hosting.
 </h3>
 
 <p align="center">
